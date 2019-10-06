@@ -1,35 +1,14 @@
-/* ```js
-require("dotenv").config();
-```
-
-​
-  ```js
-  var spotify = new Spotify(keys.spotify);
-  ```
-
-* `concert-this`
-​
-* `spotify-this-song`
-​
-* `movie-this`
-​
-* `do-what-it-says` */
-  
-
 // Initialize program
-// require("dotenv").config();
-// const keys = require("./keys.js");
 const fs = require('fs');
 const axios = require('axios');
 const moment = require('moment');
 
-  // Configure the environment variable
-  
-  // Load and initialize keys for
+// Initialize Spotify API and relevant keys
+require("dotenv").config();
+const keys = require("./keys.js");
+const Spotify = require('node-spotify-api');
+const spotify = new Spotify(keys.spotify);
 
-    // Spotify
-
-  
 // Capture user input
 const inputCommand = process.argv[2];
 const inputQuery = process.argv.slice(3).join(' ')
@@ -40,17 +19,17 @@ commandHandler(inputCommand, inputQuery);
 
 function commandHandler(command, searchTerms){
   // If spotify command
-  if (command === 'song'){
+  if (command === 'spotify-this-song'){
     songSearch(searchTerms);
   }
 
   // If bands command
-  else if (command === 'concert'){
+  else if (command === 'concert-this'){
     concertSearch(searchTerms);
   }
   
   // If movie command
-  else if (command === 'movie'){
+  else if (command === 'movie-this'){
     movieSearch(searchTerms);
   }
 
@@ -58,11 +37,15 @@ function commandHandler(command, searchTerms){
   else if (command === 'do-what-it-says'){
 
     // Read in a command and search terms from random.txt
-    fs.readFile('random.txt', 'utf8', function(contents){
+    fs.readFile('random.txt', {encoding: 'utf-8'}, function(err, contents){
 
-      const randomCommand = '';
-      const randomSearchTerms = '';
-      [randomCommand, randomSearchTerms] = contents.split(',');
+      // Check for Error
+      if (err) throw err;
+
+      // Parses input from file
+      let randomCommand = '';
+      let randomSearchTerms = '';
+      [randomCommand, randomSearchTerms] = contents.replace(/"/g, '').split(',');
       
       // Pass the new command and search terms to the handler
       commandHandler(randomCommand, randomSearchTerms);
@@ -71,6 +54,27 @@ function commandHandler(command, searchTerms){
 }
 
 function songSearch(song){
+
+    // If no song given, fill in default
+    if (!song){
+      song = 'The Sign'
+    }
+
+    // Searches spotify API for given song
+    spotify.search({ type: 'track', query: song })
+    .then(function(response) {
+      output = response.tracks.items.map(function (track){
+        let artists = 'Artists: ' + track.artists.map(a => a.name).join(', ') + '\n';
+        let name = 'Name: ' + track.name + '\n';
+        let link = 'Preview Link: ' + track.preview_url + '\n';
+        let album = 'Album: ' + track.album.name + '\n';
+        return artists + name + link + album + '---------------------------';
+      })
+      console.log(output.join('\n'));
+    })
+    .catch(function(err) {
+      console.log(err);
+    });
 
       /* This will show the following information about the song in your terminal/bash window
 ​
@@ -100,7 +104,6 @@ function concertSearch(artist){
     // Retrieve data from each concert returned
     const output = response.data.map(function (concert){
 
-
       let name = 'Venue Name: ' + concert.venue.name + '\n';
       
       // If there is no region given, no comma is added following it
@@ -110,7 +113,7 @@ function concertSearch(artist){
       let date = 'Show Date: ' + moment(concert.datetime).format('L') + '\n';
 
       // New output array will contain strings for each concert
-      return name + location + date + '----------------------------';
+      return name + location + date + '---------------------------';
     })
 
     // Print out formatted result to console
@@ -125,7 +128,7 @@ function movieSearch(movie){
     // Format movie input
     let formattedMovie = '';
     if (movie){
-      formattedMovie = movie.replace(/ /g, '+')
+      formattedMovie = movie.replace(/-/g, '+')
     }
     else {
       formattedMovie = 'mr+nobody';
