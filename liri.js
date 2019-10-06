@@ -122,18 +122,42 @@ function concertSearch(artist){
 
 function movieSearch(movie){
 
-    /* This will output the following information to your terminal/bash window:
-​
-     ```
-       * Title of the movie.
-       * Year the movie came out.]
-       * IMDB Rating of the movie.
-       * Rotten Tomatoes Rating of the movie.
-       * Country where the movie was produced.
-       * Language of the movie.
-       * Plot of the movie.
-       * Actors in the movie.
-     ```
-    * If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.' */
+    // Format movie input
+    let formattedMovie = '';
+    if (movie){
+      formattedMovie = movie.replace(/ /g, '+')
+    }
+    else {
+      formattedMovie = 'mr+nobody';
+    }
+    // Assemble queryURL
+    const queryURL = 'http://www.omdbapi.com/?apikey=trilogy&t=' + formattedMovie;
+
+    // Call Bands in Town API
+    axios.get(queryURL)
+  
+    // Parse response object into desired output fields
+    .then(function(response){
+
+      let data = response.data;      
+      
+      let output = 'Movie Title: ' + data.Title + '\n';
+      
+      output += 'IMDB Rating: ' + data.Ratings[0].Value + '\n';
+
+      output += 'Rotten Tomatoes Rating: ' + data.Ratings[2].Value + '\n';
+
+      output += 'Country: ' + data.Country + '\n';
+
+      output += 'Language: ' + data.Language + '\n';
+
+      output += 'Plot: ' + data.Plot + '\n';
+
+      output += 'Actors: ' + data.Actors + '\n' + '-----------------';
+  
+      // Print out formatted result to console
+      console.log(output);
+    })
+    .catch(err => console.log('Error: ', err));
 
 }
