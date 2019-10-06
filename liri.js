@@ -66,7 +66,7 @@ function songSearch(song){
       output = response.tracks.items.map(function (track){
         let artists = 'Artists: ' + track.artists.map(a => a.name).join(', ') + '\n';
         let name = 'Name: ' + track.name + '\n';
-        let link = 'Preview Link: ' + track.preview_url + '\n';
+        let link = 'Preview Link: ' + ((track.preview_url) ? track.preview_url : 'No preview available') + '\n';
         let album = 'Album: ' + track.album.name + '\n';
         return artists + name + link + album + '---------------------------';
       })
@@ -76,24 +76,24 @@ function songSearch(song){
       console.log(err);
     });
 
-      /* This will show the following information about the song in your terminal/bash window
-​
-      * Artist(s)
-    ​
-      * The song's name
-    ​
-      * A preview link of the song from Spotify
-    ​
-      * The album that the song is from
-​
-    * If no song is provided then your program will default to "The Sign" by Ace of Base. */
-
 }
 
 function concertSearch(artist){
+
+  let formattedArtist = artist;
+
+  // Defaults to smashmouth if no artist given
+  if (!artist){
+    formattedArtist = 'smashmouth';
+  }
+  
+  // Otherwise replaces spaces in artist query with %20
+  else {
+    formattedArtist = artist.replace(/ /g, '%20');
+  }
     
   // Assemble queryURL
-  const queryURL = ("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp");
+  const queryURL = ("https://rest.bandsintown.com/artists/" + formattedArtist + "/events?app_id=codingbootcamp");
 
   // Call Bands in Town API
   axios.get(queryURL)
