@@ -5,12 +5,12 @@ This is a command line language interface designed to give the user easy access 
 ## Usage
 
 The interface accepts one of four commands:
-|Command | Fucntion|
-|--------|--------|
-* |spotify-this-song | Searches Spotify API for given song|
-* |concert-this | Searches Bandsintown API for concerts for given artist|
-* |movie-this | Returns the OMDB API entry for given movie|
-* |do-what-it-says | Reads in and executes command written in random.txt|
+Command | Function
+------------ | ------------
+* spotify-this-song | Searches Spotify API for given song
+* concert-this | Searches Bandsintown API for concerts for given artist
+* movie-this | Returns the OMDB API entry for given movie
+* do-what-it-says | Reads in and executes command written in random.txt
 
 ### spotify-this-song
 
@@ -18,13 +18,14 @@ This command will take user inputted arguments and search the Spotify API for an
 
 ![Single Argument](/screenshots/spotify-this-song_single_argument.PNG)
 > Single Argument
+
 ![Multiple Arguments](/screenshots/spotify-this-song_multiple_arguments.PNG)
 > Multiple Arguments
 
 As many arguments as are entered after the command are passed as part of the query. If no arguments are given, the interface defaults to searching for "The Sign."
 
 ![Default](/screenshots/spotify-this-song_default.PNG)
-> Default (or "no Argument")
+> Default (or "No Argument")
 
 ### concert-this
 
@@ -32,6 +33,7 @@ This command searches Bandsintown for an artist's upcoming concerts. Again, a li
 
 ![Default and Single Argument](/screenshots/concert-this.PNG)
 > Default and Single Argument
+
 ![Multiple Arguments](/screenshots/concert-this_multiple_arguments.PNG)
 > Multiple Arguments
 
