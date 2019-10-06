@@ -5,12 +5,14 @@ This is a command line language interface designed to give the user easy access 
 ## Usage
 
 The interface accepts one of four commands:
+
 Command | Function
------------- | ------------
+------------ | -------------
  spotify-this-song | Searches Spotify API for given song
  concert-this | Searches Bandsintown API for concerts for given artist
  movie-this | Returns the OMDB API entry for given movie
  do-what-it-says | Reads in and executes command written in random.txt
+
 
 ### spotify-this-song
 
